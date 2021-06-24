@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,6 +21,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String cityID) {
                         Toast.makeText(MainActivity.this, "Return an ID of " + cityID, Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
@@ -63,15 +67,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                weatherDataService.getCityID(et_dataInput.getText().toString(), new WeatherDataService.VolleyResponseListener() {
+                weatherDataService.getCityForecastByID(et_dataInput.getText().toString(), new WeatherDataService.ForecastByIDResponse() {
                     @Override
                     public void onError(String message) {
-                        Toast.makeText(MainActivity.this, "Coś nie tak ", Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
-                    public void onResponse(String cityID) {
-                        Toast.makeText(MainActivity.this, "Return an ID of " + cityID, Toast.LENGTH_SHORT).show();
+                    public void onResponse(List <WeatherReportModel> weatherReportModel) {
+
+                        ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, weatherReportModel);
+                        lv_weatherReport.setAdapter(arrayAdapter);
                     }
                 });
             }
@@ -80,15 +86,17 @@ public class MainActivity extends AppCompatActivity {
         getBtn_getWeatherByName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                weatherDataService.getCityForecastByID(et_dataInput.getText().toString(), new WeatherDataService.VolleyResponseListener() {
+                weatherDataService.getCityForecastByName(et_dataInput.getText().toString(), new WeatherDataService.GetCityForecastByNameCallback() {
                     @Override
                     public void onError(String message) {
-                        Toast.makeText(MainActivity.this, "Coś nie tak ", Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override
-                    public void onResponse(String cityID) {
-                        Toast.makeText(MainActivity.this, "Return an ID of " + cityID, Toast.LENGTH_SHORT).show();
+                    public void onResponse(List <WeatherReportModel> weatherReportModel) {
+
+                        ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, weatherReportModel);
+                        lv_weatherReport.setAdapter(arrayAdapter);
                     }
                 });
             }
